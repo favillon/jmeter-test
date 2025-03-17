@@ -34,11 +34,19 @@ jobs:
           echo "JMeter instalado"
 
       # Paso 4: Ejecutar las pruebas de carga en JMeter
-      - name: Correr JMeter
+      - name: Correr JMeter Test Load
         run: |
           # Ejecutar el plan de pruebas JMeter (.jmx)
           /opt/jmeter/bin/jmeter -n -t ./tests/KataFakestoreApi_Load.jmx -l ./tests/Load.jtl -e -o ./tests/report
-          /opt/jmeter/bin/jmeter -n -t ./tests/KataFakestoreApi_Stress.jmx -l ./tests/Stress.jtl -e -o ./tests/report
+
+      - name: Correr JMeter Test Concurrency
+        run: |
+          # Ejecutar el plan de pruebas JMeter (.jmx)
+          /opt/jmeter/bin/jmeter -n -t ./tests/KataFakestoreApi_Concurrency.jmx -l ./tests/Concurrency.jtl -e -o ./tests/report
+
+      - name: Correr JMeter Test Stress
+        run: |
+          # Ejecutar el plan de pruebas JMeter (.jmx)
           /opt/jmeter/bin/jmeter -n -t ./tests/KataFakestoreApi_Concurrency.jmx -l ./tests/Concurrency.jtl -e -o ./tests/report
 
       # Paso 5: Publicar los resultados de las pruebas en GitHub Actions
