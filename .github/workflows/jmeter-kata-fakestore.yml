@@ -1,27 +1,26 @@
-name: JMeter Load Test
+name: JMeter Test Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  jmeter_load_test:
+  test:
+    name: Test Jmeter Fakestoreapi
     runs-on: ubuntu-latest
 
     steps:
       # Paso 1: Obtener el código del repositorio
-      - name: Obtener el código del repositorio
+      - name: Checkout código
         uses: actions/checkout@v4
 
-      # Paso 2: Configurar Java
-      - name: Configurar Java
+      - name: Configurar JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
+          distribution: 'temurin'
 
       # Paso 3: Descargar e instalar JMeter
       - name: Descargar e instalar JMeter
@@ -35,7 +34,7 @@ jobs:
           echo "JMeter instalado"
 
       # Paso 4: Ejecutar las pruebas de carga en JMeter
-      - name: Run JMeter Load Test
+      - name: Correr JMeter
         run: |
           # Ejecutar el plan de pruebas JMeter (.jmx)
           /opt/jmeter/bin/jmeter -n -t ./tests/KataFakestoreApi.jmx -l ./tests/results.jtl -e -o ./tests/report
