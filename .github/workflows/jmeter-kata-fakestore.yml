@@ -1,0 +1,54 @@
+name: JMeter Load Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  jmeter_load_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Obtener el código del repositorio
+      - name: Obtener el código del repositorio
+        uses: actions/checkout@v4
+
+      # Paso 2: Configurar Java
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+
+      # Paso 3: Descargar e instalar JMeter
+      - name: Descargar e instalar JMeter
+        run: |
+          sudo apt update
+          sudo apt install -y openjdk-17-jdk wget
+          wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz               
+          tar -xvzf apache-jmeter-5.6.3.tgz
+          sudo mv apache-jmeter-5.6.3 /opt/jmeter
+          export PATH=$PATH:/opt/jmeter/bin
+          echo "JMeter instalado"
+
+      # Paso 4: Ejecutar las pruebas de carga en JMeter
+      - name: Run JMeter Load Test
+        run: |
+          # Ejecutar el plan de pruebas JMeter (.jmx)
+          /opt/jmeter/bin/jmeter -n -t ./tests/KataFakestoreApi.jmx -l ./tests/results.jtl -e -o ./tests/report
+
+      # Paso 5: Publicar los resultados de las pruebas en GitHub Actions
+      - name: Publicar los resultados de las pruebas en GitHub Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results
+          path: ./tests/results.jtl
+
+      - name: Upload JMeter HTML Report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-report
+          path: ./tests/report
