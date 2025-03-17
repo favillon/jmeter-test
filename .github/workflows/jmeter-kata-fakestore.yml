@@ -57,8 +57,20 @@ jobs:
           path: ./tests/**/*.jtl
 
 
-      - name: Upload JMeter HTML Report as artifact
+      - name: Subir informe HTML de JMeter de reporte Load
         uses: actions/upload-artifact@v4
         with:
           name: jmeter-report
-          path: ./tests/report
+          path: ./tests/reportLoad
+
+      - name: Subir informe HTML de JMeter de reporte Concurrency 
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-report
+          path: ./tests/reportConcurrency
+          
+      - name: Subir informe HTML de JMeter de reporte Stress
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-report
+          path: ./tests/reportStress 
